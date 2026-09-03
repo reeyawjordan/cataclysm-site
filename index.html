@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cataclysm Series // Apocalyptic Hero Showcase</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Inter', sans-serif; }
+#app { width: 100vw; height: 100vh; position: relative; background: #000; overflow: hidden; }
+.slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s; z-index: 1; overflow: hidden; }
+.slide.active { opacity: 1; visibility: visible; z-index: 2; }
+.bg-video { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
+.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center center; pointer-events: none; z-index: 0; transform: scale(1.08); filter: brightness(0.78) contrast(1.08) saturate(1.05); will-change: transform; }
+@keyframes kenBurns { 0% { transform: scale(1) translate(0, 0); } 100% { transform: scale(1.12) translate(-2%, -1%); } }
+.overlay { position: absolute; inset: 0; z-index: 2; mix-blend-mode: multiply; }
+.particles { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.content { position: absolute; bottom: 15%; left: 8%; z-index: 4; max-width: 720px; color: #fff; }
+.label { font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 1.5rem; opacity: 0; transform: translateY(20px); transition: all 0.8s ease 0.3s; }
+.slide.active .label { opacity: 1; transform: translateY(0); }
+h1 { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); font-weight: 700; line-height: 0.95; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 1.5rem; text-shadow: 0 4px 30px rgba(0,0,0,0.6); opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s; }
+.slide.active h1 { opacity: 1; transform: translateY(0); }
+.subtitle { font-family: 'Inter', sans-serif; font-size: clamp(1rem, 1.8vw, 1.25rem); font-weight: 300; line-height: 1.6; margin-bottom: 2.5rem; max-width: 550px; opacity: 0; transform: translateY(20px); transition: all 0.8s ease 0.7s; text-shadow: 0 2px 12px rgba(0,0,0,0.7); }
+.slide.active .subtitle { opacity: 0.9; transform: translateY(0); }
+.cta { display: inline-block; padding: 1rem 2.5rem; font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; color: #fff; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); cursor: pointer; opacity: 0; transform: translateY(20px); transition: all 0.8s ease 0.9s, background 0.3s, border-color 0.3s, box-shadow 0.3s; }
+.slide.active .cta { opacity: 1; transform: translateY(0); }
+.cta:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.8); transform: translateY(-2px); }
+.nav-dots { position: absolute; right: 3%; top: 50%; transform: translateY(-50%); z-index: 10; display: flex; flex-direction: column; gap: 1.2rem; }
+.dot { width: 3px; height: 42px; background: rgba(255,255,255,0.25); cursor: pointer; transition: all 0.4s ease; position: relative; border: none; outline: none; }
+.dot::after { content: attr(data-label); position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(255,255,255,0.65); white-space: nowrap; opacity: 0; transition: opacity 0.3s; font-family: 'Inter', sans-serif; font-weight: 600; }
+.dot:hover::after { opacity: 1; color: #fff; }
+.dot.active { background: #fff; box-shadow: 0 0 20px rgba(255,255,255,0.8); }
+.progress { position: absolute; bottom: 0; left: 0; height: 3px; background: #fff; z-index: 10; transition: width 0.05s linear; box-shadow: 0 0 10px rgba(255,255,255,0.5); }
+.corner-info { position: absolute; top: 5%; left: 8%; z-index: 5; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: rgba(255,255,255,0.6); font-family: 'Inter', sans-serif; font-weight: 600; display: flex; align-items: center; gap: 0.75rem; }
+.corner-info::before { content: ''; width: 8px; height: 8px; background: #ff3333; border-radius: 50%; display: inline-block; animation: blink 2s infinite ease-in-out; }
+@keyframes blink { 0%, 100% { opacity: 1; box-shadow: 0 0 10px #ff3333; } 50% { opacity: 0.3; box-shadow: none; } }
+.theme-meteor .cta:hover { box-shadow: 0 0 30px rgba(255, 100, 50, 0.6); border-color: #ff6432; }
+.theme-alien .cta:hover { box-shadow: 0 0 30px rgba(0, 255, 255, 0.6); border-color: #00ffff; }
+.theme-flood .cta:hover { box-shadow: 0 0 30px rgba(100, 150, 255, 0.6); border-color: #6496ff; }
+.theme-quake .cta:hover { box-shadow: 0 0 30px rgba(230, 140, 50, 0.6); border-color: #e68c32; }
+.vignette { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(circle at 60% 40%, transparent 20%, rgba(0,0,0,0.6) 85%, rgba(0,0,0,0.85) 100%); }
+.scanlines { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: repeating-linear-gradient( 0deg, transparent, transparent 2px, rgba(0, 255, 255, 0.04) 2px, rgba(0, 255, 255, 0.04) 4px ); opacity: 0; transition: opacity 1s; }
+.theme-alien.active .scanlines { opacity: 1; }
+@media (max-width: 768px) {
+  .content { left: 5%; bottom: 12%; max-width: 90%; }
+  .nav-dots { right: 5%; }
+  .dot::after { display: none; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="corner-info">Cataclysm Series // 2026 Archive</div>
+
+  <!-- Episode I: Meteor Impact -->
+  <div class="slide theme-meteor active" data-theme="meteor">
+    <div class="bg-video">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Extinction.jpg">
+        <source src="assets/videos/extinction.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="overlay" style="background: linear-gradient(135deg, rgba(180,60,20,0.3) 0%, rgba(20,5,5,0.7) 100%);"></div>
+    <div class="vignette"></div>
+    <canvas class="particles" id="canvas-meteor"></canvas>
+    <div class="content">
+      <div class="label">Episode I // The Impact</div>
+      <h1 style="color: #ffccaa;">Extinction<br>Event</h1>
+      <div class="subtitle">The sky burned for a thousand years. A mountain of iron and flame tore through the atmosphere, rewriting the history of life in an instant of cosmic violence.</div>
+    </div>
+  </div>
+
+  <!-- Episode II: Alien Arrival -->
+  <div class="slide theme-alien" data-theme="alien">
+    <div class="bg-video">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Arrival.jpg">
+        <source src="assets/videos/invasion.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="overlay" style="background: linear-gradient(135deg, rgba(20,20,60,0.4) 0%, rgba(30,10,50,0.7) 100%);"></div>
+    <div class="vignette"></div>
+    <div class="scanlines"></div>
+    <canvas class="particles" id="canvas-alien"></canvas>
+    <div class="content">
+      <div class="label">Episode II // The Arrival</div>
+      <h1 style="color: #aaddff; text-shadow: 0 0 40px rgba(0,255,255,0.4);">Arrival</h1>
+      <div class="subtitle">They did not come in peace. The cities fell silent beneath the hum of vast engines, as beams of violet light reduced civilization to memory.</div>
+    </div>
+  </div>
+
+  <!-- Episode III: Flood -->
+  <div class="slide theme-flood" data-theme="flood">
+    <div class="bg-video">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Deluge.jpg">
+        <source src="assets/videos/deluge.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="overlay" style="background: linear-gradient(180deg, rgba(30,50,70,0.2) 0%, rgba(10,20,40,0.75) 100%);"></div>
+    <div class="vignette"></div>
+    <canvas class="particles" id="canvas-flood"></canvas>
+    <div class="content">
+      <div class="label">Episode III // The Deluge</div>
+      <h1 style="color: #ddeeff;">Deluge</h1>
+      <div class="subtitle">The oceans remembered their ancient claim. Skyscrapers became reefs, streets became rivers, and the rain never stopped falling.</div>
+    </div>
+  </div>
+
+  <!-- Episode IV: Earthquake Rupture -->
+  <div class="slide theme-quake" data-theme="quake">
+    <div class="bg-video">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Rupture.jpg">
+        <source src="assets/videos/rupture.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="overlay" style="background: linear-gradient(135deg, rgba(60,35,15,0.4) 0%, rgba(30,15,10,0.75) 100%);"></div>
+    <div class="vignette"></div>
+    <canvas class="particles" id="canvas-quake"></canvas>
+    <div class="content">
+      <div class="label">Episode IV // The Rupture</div>
+      <h1 style="color: #ddccaa;">Rupture</h1>
+      <div class="subtitle">The ground betrayed its foundations. Continents cracked like eggshells, sending cities tumbling into the yawning earth beneath.</div>
+    </div>
+  </div>
+
+  <!-- Navigation Dots -->
+  <div class="nav-dots">
+    <button class="dot active" data-index="0" data-label="Impact"></button>
+    <button class="dot" data-index="1" data-label="Invasion"></button>
+    <button class="dot" data-index="2" data-label="Flood"></button>
+    <button class="dot" data-index="3" data-label="Quake"></button>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress" id="progress"></div>
+
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.dot');
+const videos = document.querySelectorAll('.hero-video');
+const progress = document.getElementById('progress');
+let current = 0;
+let interval;
+const duration = 8000;
+
+function restartVideo(video) {
+  if (!video) return;
+
+  video.pause();
+  video.currentTime = 0.05;
+
+  const playPromise = video.play();
+
+  if (playPromise) {
+    playPromise.catch(() => {});
+  }
+}
+
+function goTo(index) {
+  slides[current].classList.remove('active');
+  dots[current].classList.remove('active');
+  current = (index + slides.length) % slides.length;
+  slides[current].classList.add('active');
+  dots[current].classList.add('active');
+  videos.forEach((video, index) => {
+    if (index === current) {
+      restartVideo(video);
+    } else {
+      video.pause();
+      video.currentTime = 0;
+    }
+  });
+  resetTimer();
+}
+
+function next() { goTo(current + 1); }
+function prev() { goTo(current - 1); }
+
+function resetTimer() {
+  clearInterval(interval);
+  let start = Date.now();
+  interval = setInterval(() => {
+    let elapsed = Date.now() - start;
+    let pct = Math.min(elapsed / duration * 100, 100);
+    progress.style.width = pct + '%';
+    if (elapsed >= duration) next();
+  }, 50);
+}
+
+dots.forEach(dot => {
+  dot.addEventListener('click', () => goTo(parseInt(dot.dataset.index)));
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') next();
+  if (e.key === 'ArrowLeft') prev();
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+document.addEventListener('touchend', e => {
+  let diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
+});
+
+videos.forEach(video => {
+  video.addEventListener('ended', () => {
+    video.currentTime = 0.05;
+    const playPromise = video.play();
+    if (playPromise) playPromise.catch(() => {});
+  });
+  video.load();
+});
+
+Promise.all(Array.from(videos).map(video => new Promise(resolve => {
+  if (video.readyState >= 2) {
+    resolve();
+  } else {
+    video.addEventListener('loadeddata', resolve, { once: true });
+  }
+}))).then(() => {
+  restartVideo(videos[current]);
+  resetTimer();
+});
+
+class ParticleSystem {
+  constructor(canvas, type) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext('2d');
+    this.type = type;
+    this.particles = [];
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+    this.init();
+    this.animate();
+  }
+  
+  resize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    this.w = this.canvas.width;
+    this.h = this.canvas.height;
+  }
+  
+  init() {
+    const count = this.type === 'flood' ? 240 : this.type === 'meteor' ? 140 : this.type === 'alien' ? 90 : 70;
+    for (let i = 0; i < count; i++) {
+      this.particles.push(this.createParticle());
+    }
+  }
+  
+  createParticle() {
+    const w = this.w, h = this.h;
+    switch(this.type) {
+      case 'meteor':
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.6,
+          vy: -Math.random() * 2.2 - 0.6,
+          size: Math.random() * 3 + 1,
+          alpha: Math.random() * 0.8 + 0.2,
+          color: `hsl(${Math.random() * 35 + 10}, 100%, ${Math.random() * 30 + 55}%)`,
+          life: Math.random() * 100
+        };
+      case 'alien':
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: -Math.random() * 0.8 - 0.2,
+          size: Math.random() * 2.5 + 0.5,
+          alpha: Math.random() * 0.6 + 0.1,
+          color: Math.random() > 0.5 ? '#00ffff' : '#ff00ff',
+          pulse: Math.random() * Math.PI * 2
+        };
+      case 'flood':
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h - h,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: Math.random() * 9 + 14,
+          size: Math.random() * 2 + 1,
+          alpha: Math.random() * 0.4 + 0.15,
+          color: '#aaccff',
+          length: Math.random() * 22 + 12
+        };
+      case 'quake':
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 1.2,
+          vy: -Math.random() * 0.6 - 0.2,
+          size: Math.random() * 4 + 2,
+          alpha: Math.random() * 0.5 + 0.1,
+          color: `hsl(${Math.random() * 30 + 20}, 60%, ${Math.random() * 20 + 40}%)`,
+          rotation: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.03
+        };
+    }
+  }
+  
+  update() {
+    const w = this.w, h = this.h;
+    this.particles.forEach((p, i) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      
+      if (this.type === 'meteor') {
+        p.life--;
+        p.alpha = Math.max(0, p.life / 100);
+        if (p.life <= 0 || p.y < 0) this.particles[i] = this.createParticle();
+      }
+      else if (this.type === 'alien') {
+        p.pulse += 0.025;
+        p.alpha = 0.3 + Math.sin(p.pulse) * 0.2;
+        if (p.y < 0) this.particles[i] = this.createParticle();
+      }
+      else if (this.type === 'flood') {
+        if (p.y > h) {
+          p.y = -20;
+          p.x = Math.random() * w;
+        }
+      }
+      else if (this.type === 'quake') {
+        p.rotation += p.rotSpeed;
+        p.alpha *= 0.995;
+        if (p.alpha < 0.05 || p.y < 0) this.particles[i] = this.createParticle();
+      }
+      
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+    });
+  }
+  
+  draw() {
+    this.ctx.clearRect(0, 0, this.w, this.h);
+    this.particles.forEach(p => {
+      this.ctx.save();
+      this.ctx.globalAlpha = p.alpha;
+      
+      if (this.type === 'flood') {
+        this.ctx.strokeStyle = p.color;
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.moveTo(p.x, p.y);
+        this.ctx.lineTo(p.x + p.vx * 2, p.y + p.length);
+        this.ctx.stroke();
+      }
+      else if (this.type === 'quake') {
+        this.ctx.translate(p.x, p.y);
+        this.ctx.rotate(p.rotation);
+        this.ctx.fillStyle = p.color;
+        this.ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+      }
+      else {
+        this.ctx.fillStyle = p.color;
+        this.ctx.beginPath();
+        this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        this.ctx.fill();
+      }
+      
+      this.ctx.restore();
+    });
+  }
+  
+  animate() {
+    this.update();
+    this.draw();
+    requestAnimationFrame(() => this.animate());
+  }
+}
+
+const systems = {};
+setTimeout(() => {
+  systems.meteor = new ParticleSystem(document.getElementById('canvas-meteor'), 'meteor');
+  systems.alien = new ParticleSystem(document.getElementById('canvas-alien'), 'alien');
+  systems.flood = new ParticleSystem(document.getElementById('canvas-flood'), 'flood');
+  systems.quake = new ParticleSystem(document.getElementById('canvas-quake'), 'quake');
+}, 100);
+
+let shakeIntensity = 0;
+setInterval(() => {
+  if (slides[current].dataset.theme === 'quake') {
+    shakeIntensity = 2;
+  } else {
+    shakeIntensity = 0;
+  }
+  if (shakeIntensity > 0) {
+    const dx = (Math.random() - 0.5) * shakeIntensity;
+    const dy = (Math.random() - 0.5) * shakeIntensity;
+    slides[current].style.transform = `translate(${dx}px, ${dy}px)`;
+  } else {
+    slides[current].style.transform = 'none';
+  }
+}, 50);
+</script>
+</body>
+</html>
