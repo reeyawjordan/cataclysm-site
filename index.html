@@ -112,7 +112,7 @@ h1 { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); fon
   <!-- Episode I: Meteor Impact -->
   <div class="slide theme-meteor active" data-theme="meteor">
     <div class="bg-video">
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Extinction.jpg">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Extinction.jpg">
         <source src="assets/videos/extinction.mp4" type="video/mp4">
       </video>
     </div>
@@ -129,7 +129,7 @@ h1 { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); fon
   <!-- Episode II: Alien Arrival -->
   <div class="slide theme-alien" data-theme="alien">
     <div class="bg-video">
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Arrival.jpg">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Arrival.jpg">
         <source src="assets/videos/invasion.mp4" type="video/mp4">
       </video>
     </div>
@@ -147,7 +147,7 @@ h1 { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); fon
   <!-- Episode III: Flood -->
   <div class="slide theme-flood" data-theme="flood">
     <div class="bg-video">
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Deluge.jpg">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Deluge.jpg">
         <source src="assets/videos/deluge.mp4" type="video/mp4">
       </video>
     </div>
@@ -164,7 +164,7 @@ h1 { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); fon
   <!-- Episode IV: Earthquake Rupture -->
   <div class="slide theme-quake" data-theme="quake">
     <div class="bg-video">
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Rupture.jpg">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Rupture.jpg">
         <source src="assets/videos/rupture.mp4" type="video/mp4">
       </video>
     </div>
@@ -181,7 +181,7 @@ h1 { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); fon
   <!-- Episode V: Contagion -->
   <div class="slide theme-contagion" data-theme="contagion">
     <div class="bg-video">
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Contagion.jpg">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Contagion.jpg">
         <source src="assets/videos/contagion.mp4" type="video/mp4">
       </video>
     </div>
@@ -202,7 +202,7 @@ h1 { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); fon
   <!-- Episode VI: Permafrost -->
   <div class="slide theme-permafrost" data-theme="permafrost">
     <div class="bg-video">
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Permafrost.jpg">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Permafrost.jpg">
         <source src="assets/videos/permafrost.mp4" type="video/mp4">
       </video>
     </div>
@@ -229,7 +229,7 @@ h1 { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); fon
   <!-- Episode VII: Fallout -->
   <div class="slide theme-fallout" data-theme="fallout">
     <div class="bg-video">
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Fallout.jpg">
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Fallout.jpg">
         <source src="assets/videos/fallout.mp4" type="video/mp4">
       </video>
     </div>
@@ -293,6 +293,32 @@ function restartVideo(video) {
   }
 }
 
+function prepareVideo(index) {
+  const video = videos[index];
+  if (!video) return;
+
+  video.preload = 'metadata';
+  if (video.dataset.prepared !== 'true') {
+    video.dataset.prepared = 'true';
+    video.load();
+  }
+}
+
+function prepareActiveVideos() {
+  const nextIndex = (current + 1) % videos.length;
+  videos.forEach((video, index) => {
+    if (index === current || index === nextIndex) {
+      video.preload = 'metadata';
+      prepareVideo(index);
+    } else {
+      video.pause();
+      video.currentTime = 0;
+      video.preload = 'none';
+      delete video.dataset.prepared;
+    }
+  });
+}
+
 function goTo(index) {
   slides[current].classList.remove('active');
   dots[current].classList.remove('active');
@@ -301,12 +327,15 @@ function goTo(index) {
   dots[current].classList.add('active');
   videos.forEach((video, index) => {
     if (index === current) {
-      restartVideo(video);
+      video.pause();
+      video.currentTime = 0;
     } else {
       video.pause();
       video.currentTime = 0;
     }
   });
+  prepareActiveVideos();
+  restartVideo(videos[current]);
   resetTimer();
 }
 
@@ -346,19 +375,11 @@ videos.forEach(video => {
     const playPromise = video.play();
     if (playPromise) playPromise.catch(() => {});
   });
-  video.load();
 });
 
-Promise.all(Array.from(videos).map(video => new Promise(resolve => {
-  if (video.readyState >= 2) {
-    resolve();
-  } else {
-    video.addEventListener('loadeddata', resolve, { once: true });
-  }
-}))).then(() => {
-  restartVideo(videos[current]);
-  resetTimer();
-});
+prepareActiveVideos();
+restartVideo(videos[current]);
+resetTimer();
 
 class ParticleSystem {
   constructor(canvas, type) {
