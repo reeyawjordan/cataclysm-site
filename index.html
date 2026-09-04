@@ -75,6 +75,26 @@ h1 { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); fon
 @keyframes iceShimmer { 0%, 72%, 100% { background-position: 180% 0; } 86% { background-position: -30% 0; } }
 @keyframes freezeFlicker { 0%, 88%, 100% { opacity: 0.9; } 91% { opacity: 0.74; } 93% { opacity: 0.92; } }
 @keyframes coldPulse { 0% { opacity: 0; background: rgba(95,184,255,0); } 35% { opacity: 1; background: rgba(95,184,255,0.12); } 100% { opacity: 0; background: rgba(95,184,255,0); } }
+.fallout-haze { position: absolute; inset: -8% 0 35%; z-index: 2; pointer-events: none; background: radial-gradient(ellipse at 52% 64%, rgba(255,179,71,0.12), transparent 42%), repeating-linear-gradient(90deg, transparent 0 12%, rgba(255,122,26,0.025) 14%, transparent 18%); filter: blur(10px); mix-blend-mode: screen; opacity: 0.7; animation: heatHaze 9s ease-in-out infinite alternate; }
+.fallout-dust-cloud { position: absolute; left: -15%; bottom: 5%; width: 130%; height: 34%; z-index: 2; pointer-events: none; background: radial-gradient(ellipse at 30% 70%, rgba(42,42,42,0.42), transparent 58%), radial-gradient(ellipse at 70% 58%, rgba(89,89,89,0.3), transparent 55%); filter: blur(18px); opacity: 0.7; animation: dustRoll 18s ease-in-out infinite alternate; }
+.fallout-dust-cloud.cloud-two { opacity: 0.45; animation-duration: 27s; animation-direction: alternate-reverse; transform: scale(1.15); }
+.fallout-smoke { position: absolute; bottom: 18%; width: 28%; height: 72%; z-index: 2; pointer-events: none; background: radial-gradient(ellipse at bottom, rgba(42,42,42,0.55), transparent 67%); filter: blur(20px); opacity: 0.16; animation: smokeRise 22s ease-in-out infinite alternate; }
+.fallout-smoke.smoke-left { left: 9%; }
+.fallout-smoke.smoke-right { right: 12%; opacity: 0.12; animation-duration: 29s; animation-delay: -8s; }
+.fallout-smoke.smoke-mid { left: 34%; bottom: 8%; width: 42%; height: 46%; opacity: 0.14; filter: blur(26px); animation-duration: 17s; animation-direction: alternate-reverse; }
+.fallout-smoke.smoke-front { left: -8%; bottom: -4%; width: 116%; height: 30%; opacity: 0.13; filter: blur(30px); animation-duration: 13s; }
+.fallout-horizon { position: absolute; left: 20%; right: 20%; bottom: 19%; height: 26%; z-index: 2; pointer-events: none; background: radial-gradient(ellipse, rgba(255,122,26,0.26), transparent 68%); filter: blur(18px); opacity: 0.65; animation: horizonBreath 8s ease-in-out infinite; }
+.fallout-burn { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(ellipse at center, transparent 57%, rgba(20,12,8,0.36) 100%), linear-gradient(90deg, rgba(18,12,8,0.32), transparent 13% 87%, rgba(18,12,8,0.34)); box-shadow: inset 0 0 85px rgba(255,82,15,0.12); }
+.fallout-gust-active { animation-duration: 700ms !important; opacity: 0.9 !important; }
+.theme-fallout .particles { mix-blend-mode: screen; }
+.theme-fallout .fallout-ash-background { opacity: 0.32; }
+.theme-fallout .fallout-ash-midground { opacity: 0.62; }
+.theme-fallout .fallout-ash-foreground { opacity: 0.88; filter: blur(0.7px); }
+.theme-fallout h1 { color: #ffb347 !important; text-shadow: 0 0 36px rgba(255,122,26,0.42); }
+@keyframes heatHaze { 0% { transform: skewX(-1deg) translateX(-1%); } 100% { transform: skewX(1deg) translateX(1%); } }
+@keyframes dustRoll { 0% { transform: translateX(-5%) scaleY(0.92); } 100% { transform: translateX(5%) scaleY(1.08); } }
+@keyframes smokeRise { 0% { transform: translate(-3%, 3%) scale(0.95); } 100% { transform: translate(4%, -5%) scale(1.08); } }
+@keyframes horizonBreath { 0%, 100% { opacity: 0.48; } 50% { opacity: 0.8; } }
 .vignette { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(circle at 60% 40%, transparent 20%, rgba(0,0,0,0.6) 85%, rgba(0,0,0,0.85) 100%); }
 .scanlines { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: repeating-linear-gradient( 0deg, transparent, transparent 2px, rgba(0, 255, 255, 0.04) 2px, rgba(0, 255, 255, 0.04) 4px ); opacity: 0; transition: opacity 1s; }
 .theme-alien.active .scanlines { opacity: 1; }
@@ -206,6 +226,35 @@ h1 { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); fon
     </div>
   </div>
 
+  <!-- Episode VII: Fallout -->
+  <div class="slide theme-fallout" data-theme="fallout">
+    <div class="bg-video">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto" disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback" poster="assets/images/Fallout.jpg">
+        <source src="assets/videos/fallout.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="overlay" style="background: linear-gradient(135deg, rgba(65,35,18,0.38) 0%, rgba(18,12,8,0.82) 100%);"></div>
+    <div class="vignette"></div>
+    <div class="fallout-haze"></div>
+    <div class="fallout-dust-cloud"></div>
+    <div class="fallout-dust-cloud cloud-two"></div>
+    <div class="fallout-smoke smoke-left"></div>
+    <div class="fallout-smoke smoke-right"></div>
+    <div class="fallout-smoke smoke-mid"></div>
+    <div class="fallout-smoke smoke-front"></div>
+    <div class="fallout-horizon"></div>
+    <div class="fallout-burn"></div>
+    <canvas class="particles fallout-ash-background" id="canvas-fallout-background"></canvas>
+    <canvas class="particles fallout-ash-midground" id="canvas-fallout-midground"></canvas>
+    <canvas class="particles fallout-ash-foreground" id="canvas-fallout-foreground"></canvas>
+    <canvas class="particles fallout-embers" id="canvas-fallout-embers"></canvas>
+    <div class="content">
+      <div class="label">Episode VII // The Fallout</div>
+      <h1>The<br>Fallout</h1>
+      <div class="subtitle">The world ended in flashes of light. Civilization survived only as radioactive ash beneath a poisoned sky.</div>
+    </div>
+  </div>
+
   <!-- Navigation Dots -->
   <div class="nav-dots">
     <button class="dot active" data-index="0" data-label="Impact"></button>
@@ -214,6 +263,7 @@ h1 { font-family: 'Oswald', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); fon
     <button class="dot" data-index="3" data-label="Quake"></button>
     <button class="dot" data-index="4" data-label="Contagion"></button>
     <button class="dot" data-index="5" data-label="Permafrost"></button>
+    <button class="dot" data-index="6" data-label="Fallout"></button>
   </div>
 
   <!-- Progress Bar -->
@@ -331,7 +381,7 @@ class ParticleSystem {
   }
   
   init() {
-    const count = this.type === 'flood' ? 240 : this.type === 'meteor' ? 140 : this.type === 'alien' ? 90 : this.type === 'contagion' ? 56 : this.type === 'permafrost-background' ? 500 : this.type === 'permafrost-midground' ? 120 : this.type === 'permafrost-foreground' ? 80 : 70;
+    const count = this.type === 'flood' ? 240 : this.type === 'meteor' ? 140 : this.type === 'alien' ? 90 : this.type === 'contagion' ? 56 : this.type === 'permafrost-background' ? 500 : this.type === 'permafrost-midground' ? 120 : this.type === 'permafrost-foreground' ? 80 : this.type === 'fallout-background' ? 420 : this.type === 'fallout-midground' ? 150 : this.type === 'fallout-foreground' ? 80 : this.type === 'fallout-embers' ? 28 : 70;
     for (let i = 0; i < count; i++) {
       this.particles.push(this.createParticle());
     }
@@ -440,6 +490,56 @@ class ParticleSystem {
           phase: Math.random() * Math.PI * 2,
           length: Math.random() * 10 + 8
         };
+      case 'fallout-background':
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: Math.random() * 0.55 + 0.2,
+          vy: Math.random() * 0.3 - 0.1,
+          size: Math.random() * 1.5 + 0.4,
+          alpha: Math.random() * 0.2 + 0.04,
+          color: Math.random() > 0.5 ? '#595959' : '#4a4038',
+          phase: Math.random() * Math.PI * 2
+        };
+      case 'fallout-midground':
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: Math.random() * 1.2 + 0.7,
+          vy: Math.random() * 0.8 - 0.2,
+          size: Math.random() * 2.3 + 0.8,
+          alpha: Math.random() * 0.35 + 0.1,
+          color: Math.random() > 0.5 ? '#595959' : '#6d6258',
+          rotation: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.04,
+          phase: Math.random() * Math.PI * 2,
+          length: Math.random() * 10 + 8
+        };
+      case 'fallout-foreground':
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: Math.random() * 2 + 1.5,
+          vy: Math.random() * 1.4 - 0.4,
+          size: Math.random() * 3 + 1.2,
+          alpha: Math.random() * 0.5 + 0.18,
+          color: Math.random() > 0.5 ? '#2a2a2a' : '#595959',
+          rotation: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.08,
+          phase: Math.random() * Math.PI * 2,
+          length: Math.random() * 14 + 10
+        };
+      case 'fallout-embers':
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: Math.random() * 1.4 + 0.4,
+          vy: -Math.random() * 0.8 - 0.1,
+          size: Math.random() * 1.8 + 0.5,
+          alpha: Math.random() * 0.7 + 0.15,
+          color: Math.random() > 0.5 ? '#ff7a1a' : '#ffb347',
+          life: Math.random() * 100 + 40
+        };
     }
   }
   
@@ -484,6 +584,18 @@ class ParticleSystem {
         p.y += p.vy * (speed - 1);
         p.rotation += Math.sin(p.phase) * p.rotSpeed;
         if (p.y > h + 12 || p.x > w + 12) this.particles[i] = this.createParticle();
+      }
+      else if (this.type.startsWith('fallout-')) {
+        const speed = this.gust ? 1.35 : 1;
+        p.phase = (p.phase || 0) + 0.02 * speed;
+        p.x += p.vx * (speed - 1) + Math.sin(p.phase) * 0.25;
+        p.y += p.vy * (speed - 1);
+        if (this.type === 'fallout-embers') {
+          p.life--;
+          p.alpha = Math.max(0, p.life / 100);
+          if (p.life <= 0 || p.x > w + 12 || p.y < -12) this.particles[i] = this.createParticle();
+        }
+        if (p.x > w + 16) this.particles[i] = this.createParticle();
       }
       
       if (p.x < 0) p.x = w;
@@ -534,6 +646,30 @@ class ParticleSystem {
         this.ctx.lineTo(0, 0);
         this.ctx.stroke();
       }
+      else if (this.type === 'fallout-background') {
+        this.ctx.fillStyle = p.color;
+        this.ctx.beginPath();
+        this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        this.ctx.fill();
+      }
+      else if (this.type === 'fallout-midground' || this.type === 'fallout-foreground') {
+        this.ctx.translate(p.x, p.y);
+        this.ctx.rotate(p.rotation);
+        this.ctx.strokeStyle = p.color;
+        this.ctx.lineWidth = Math.min(2, Math.max(1, p.size * 0.6));
+        this.ctx.beginPath();
+        this.ctx.moveTo(-p.length, -p.length * 0.12);
+        this.ctx.lineTo(0, 0);
+        this.ctx.stroke();
+      }
+      else if (this.type === 'fallout-embers') {
+        this.ctx.fillStyle = p.color;
+        this.ctx.shadowBlur = 8;
+        this.ctx.shadowColor = p.color;
+        this.ctx.beginPath();
+        this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        this.ctx.fill();
+      }
       else {
         this.ctx.fillStyle = p.color;
         this.ctx.beginPath();
@@ -564,22 +700,35 @@ setTimeout(() => {
     new ParticleSystem(document.getElementById('canvas-permafrost-midground'), 'permafrost-midground'),
     new ParticleSystem(document.getElementById('canvas-permafrost-foreground'), 'permafrost-foreground')
   ];
+  systems.falloutLayers = [
+    new ParticleSystem(document.getElementById('canvas-fallout-background'), 'fallout-background'),
+    new ParticleSystem(document.getElementById('canvas-fallout-midground'), 'fallout-midground'),
+    new ParticleSystem(document.getElementById('canvas-fallout-foreground'), 'fallout-foreground'),
+    new ParticleSystem(document.getElementById('canvas-fallout-embers'), 'fallout-embers')
+  ];
 }, 100);
 
 function setPermafrostGust(active) {
   (systems.permafrostLayers || []).forEach(system => system.gust = active);
 }
 
+function setFalloutGust(active) {
+  (systems.falloutLayers || []).forEach(system => system.gust = active);
+}
+
 let shakeIntensity = 0;
 let permafrostGustAt = Date.now() + 6000;
 let permafrostColdAt = Date.now() + 10000;
+let falloutGustAt = Date.now() + 7000;
 let lastTheme = slides[current].dataset.theme;
 setInterval(() => {
   const activeTheme = slides[current].dataset.theme;
   if (activeTheme !== lastTheme) {
     permafrostGustAt = Date.now() + 6000;
     permafrostColdAt = Date.now() + 10000;
+    falloutGustAt = Date.now() + 7000;
     setPermafrostGust(false);
+    setFalloutGust(false);
     slides[current].querySelector('.permafrost-gust-layer')?.classList.remove('gust-active');
     lastTheme = activeTheme;
   }
@@ -605,6 +754,17 @@ setInterval(() => {
     coldPulse.classList.add('cold-pulse-active');
     setTimeout(() => {
       coldPulse.classList.remove('cold-pulse-active');
+    }, 700);
+  }
+  if (activeTheme === 'fallout' && Date.now() >= falloutGustAt) {
+    falloutGustAt = Date.now() + 7000;
+    setFalloutGust(true);
+    const falloutSlide = slides[current];
+    const dustClouds = falloutSlide.querySelectorAll('.fallout-dust-cloud, .fallout-smoke');
+    dustClouds.forEach(layer => layer.classList.add('fallout-gust-active'));
+    setTimeout(() => {
+      setFalloutGust(false);
+      dustClouds.forEach(layer => layer.classList.remove('fallout-gust-active'));
     }, 700);
   }
   if (slides[current].dataset.theme === 'quake') {
